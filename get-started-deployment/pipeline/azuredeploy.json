@@ -17,28 +17,17 @@
         "description": "Specify a location for the resources."
       }
     },
-    "storageSKU": {
-      "type": "string",
-      "defaultValue": "Standard_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Standard_GRS",
-        "Standard_RAGRS",
-        "Standard_ZRS",
-        "Premium_LRS",
-        "Premium_ZRS",
-        "Standard_GZRS",
-        "Standard_RAGZRS"
-      ],
-      "metadata": {
-        "description": "Specify the storage account type."
-      }
-    },
     "linuxFxVersion": {
       "type": "string",
       "defaultValue": "php|7.0",
       "metadata": {
-        "description": "Specify the Runtime stack of current web app"
+        "description": "The Runtime stack of current web app"
+      }
+    },
+    "linkedTemplateUri": {
+      "type": "string",
+      "metadata": {
+        "description": "The Uri of the linked template."
       }
     }
   },
@@ -49,16 +38,22 @@
   },
   "resources": [
     {
-      "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2019-06-01",
-      "name": "[variables('storageAccountName')]",
-      "location": "[parameters('location')]",
-      "sku": {
-        "name": "[parameters('storageSKU')]"
-      },
-      "kind": "StorageV2",
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
       "properties": {
-        "supportsHttpsTrafficOnly": true
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[parameters('linkedTemplateUri')]"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[variables('storageAccountName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        }
       }
     },
     {
@@ -101,7 +96,7 @@
   "outputs": {
     "storageEndpoint": {
       "type": "object",
-      "value": "[reference(variables('storageAccountName')).primaryEndpoints]"
+      "value": "[reference('linkedTemplate').outputs.storageEndpoint.value]"
     }
   }
 }

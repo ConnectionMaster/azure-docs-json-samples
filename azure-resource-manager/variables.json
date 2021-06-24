@@ -1,116 +1,120 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "inputValue": {
-            "type": "string",
-            "defaultValue": "deployment parameter"
-        }
-    },
-    "variables": {
-        "var1": "myVariable",
-        "var2": "[concat(variables('var1'), '-next') ]",
-        "var3": "[concat(parameters('inputValue'), '-fromparam')]",
-        "var4": [
-            1,
-            2,
-            3,
-            4
-        ],
-        "var5": {
-            "property1": "value1",
-            "property2": "value2"
-        },
-        "var6": {
-            "copy": [
-                {
-                    "name": "disks",
-                    "count": 5,
-                    "input": {
-                        "name": "[concat('myDataDisk', copyIndex('disks', 1))]",
-                        "diskSizeGB": "1",
-                        "diskIndex": "[copyIndex('disks')]"
-                    }
-                },
-                {
-                    "name": "diskNames",
-                    "count": 5,
-                    "input": "[concat('myDataDisk', copyIndex('diskNames', 1))]"
-                }
-            ]
-        },
-        "copy": [
-            {
-                "name": "var7",
-                "count": 5,
-                "input": {
-                    "name": "[concat('oneDataDisk', copyIndex('var7', 1))]",
-                    "diskSizeGB": "1",
-                    "diskIndex": "[copyIndex('var7')]"
-                }
-            },
-            {
-                "name": "var8",
-                "count": 3,
-                "input": {
-                    "name": "[concat('twoDataDisk', copyIndex('var8', 1))]",
-                    "diskSizeGB": "1",
-                    "diskIndex": "[copyIndex('var8')]"
-                }
-            },
-            {
-                "name": "var9",
-                "count": 4,
-                "input": "[concat('stringValue', copyIndex('var9'))]"
-            },
-            {
-                "name": "var10",
-                "count": 4,
-                "input": "[copyIndex('var10')]"
-            }
-        ]
-    },
-    "resources": [],
-    "outputs": {
-        "exampleOutput1": {
-            "value": "[variables('var1')]",
-            "type": "string"
-        },
-        "exampleOutput2": {
-            "value": "[variables('var2')]",
-            "type": "string"
-        },
-        "exampleOutput3": {
-            "value": "[variables('var3')]",
-            "type": "string"
-        },
-        "exampleOutput4": {
-            "value": "[variables('var4')]",
-            "type": "array"
-        },
-        "exampleOutput5": {
-            "type": "object",
-            "value": "[variables('var5')]"
-        },
-        "exampleOutput6": {
-            "type": "object",
-            "value": "[variables('var6')]"
-        },
-        "exampleOutput7": {
-            "type": "array",
-            "value": "[variables('var7')]"
-        },
-        "exampleOutput8": {
-            "type": "array",
-            "value": "[variables('var8')]"
-        },
-        "exampleOutput9": {
-            "type": "array",
-            "value": "[variables('var9')]"
-        },
-        "exampleOutput10": {
-            "type": "array",
-            "value": "[variables('var10')]"
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "inputValue": {
+      "defaultValue": "deployment parameter",
+      "type": "string"
     }
+  },
+  "variables": {
+    "stringVar": "myVariable",
+    "concatToVar": "[concat(variables('stringVar'), '-addtovar') ]",
+    "concatToParam": "[concat(parameters('inputValue'), '-addtoparam')]",
+    "arrayVar": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "objectVar": {
+      "property1": "value1",
+      "property2": "value2"
+    },
+    "copyWithinVar": {
+      "copy": [
+        {
+          "name": "disks",
+          "count": 5,
+          "input": {
+            "name": "[concat('myDataDisk', copyIndex('disks', 1))]",
+            "diskSizeGB": "1",
+            "diskIndex": "[copyIndex('disks')]"
+          }
+        },
+        {
+          "name": "diskNames",
+          "count": 5,
+          "input": "[concat('myDataDisk', copyIndex('diskNames', 1))]"
+        }
+      ]
+    },
+    "copy": [
+      {
+        "name": "topLevelCopy1",
+        "count": 5,
+        "input": {
+          "name": "[concat('oneDataDisk', copyIndex('topLevelCopy1', 1))]",
+          "diskSizeGB": "1",
+          "diskIndex": "[copyIndex('topLevelCopy1')]"
+        }
+      },
+      {
+        "name": "topLevelCopy2",
+        "count": 3,
+        "input": {
+          "name": "[concat('twoDataDisk', copyIndex('topLevelCopy2', 1))]",
+          "diskSizeGB": "1",
+          "diskIndex": "[copyIndex('topLevelCopy2')]"
+        }
+      },
+      {
+        "name": "topLevelCopy3",
+        "count": 4,
+        "input": "[concat('stringValue', copyIndex('topLevelCopy3'))]"
+      },
+      {
+        "name": "topLevelCopy4",
+        "count": 4,
+        "input": "[copyIndex('topLevelCopy4')]"
+      }
+    ]
+  },
+  "resources": [],
+  "outputs": {
+    "stringOutput": {
+      "type": "string",
+      "value": "[variables('stringVar')]"
+    },
+    "concatToVariableOutput": {
+      "type": "string",
+      "value": "[variables('concatToVar')]"
+    },
+    "concatToParameterOutput": {
+      "type": "string",
+      "value": "[variables('concatToParam')]"
+    },
+    "arrayOutput": {
+      "type": "array",
+      "value": "[variables('arrayVar')]"
+    },
+    "arrayElementOutput": {
+      "type": "int",
+      "value": "[variables('arrayVar')[0]]"
+    },
+    "objectOutput": {
+      "type": "object",
+      "value": "[variables('objectVar')]"
+    },
+    "copyWithinVariableOutput": {
+      "type": "object",
+      "value": "[variables('copyWithinVar')]"
+    },
+    "topLevelCopyOutput1": {
+      "type": "array",
+      "value": "[variables('topLevelCopy1')]"
+    },
+    "topLevelCopyOutput2": {
+      "type": "array",
+      "value": "[variables('topLevelCopy2')]"
+    },
+    "topLevelCopyOutput3": {
+      "type": "array",
+      "value": "[variables('topLevelCopy3')]"
+    },
+    "topLevelCopyOutput4": {
+      "type": "array",
+      "value": "[variables('topLevelCopy4')]"
+    }
+  }
 }
